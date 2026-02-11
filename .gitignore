@@ -1,0 +1,10 @@
+__pycache__/
+3GPP Model/
+Custom Env/
+ITUR Model/
+matolak model/
+SB3 Model/
+rician fading/
+*.pdf
+logs/
+models/
