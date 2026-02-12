@@ -339,7 +339,7 @@ class UAVTrajectoryVisualizer:
         plt.close()
         print(f"      ✓ Static plot saved to: {save_path}")
     
-    def visualize_all(self, output_dir="visualizations"):
+    def visualize_all(self, output_dir="Energy Optimization/visualizations"):
         os.makedirs(output_dir, exist_ok=True)
         print(f"\n╔{'═'*68}╗")
         print(f"║   UAV CONTINUOUS TRAJECTORY VISUALIZATION SYSTEM                ║")
@@ -356,7 +356,7 @@ class UAVTrajectoryVisualizer:
         self.env.close()
 
 if __name__ == "__main__":
-    MODEL_PATH = r"models\uav_ppo_continuous\1770400388\final_model.zip"
+    MODEL_PATH = r"Energy Optimization\models\uav_sac_continuous\1770867923\sac_final_model.zip"
     if os.path.exists(MODEL_PATH):
         visualizer = UAVTrajectoryVisualizer(model_path=MODEL_PATH, num_episodes=1)
         visualizer.visualize_all()

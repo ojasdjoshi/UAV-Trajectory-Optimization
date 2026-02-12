@@ -70,6 +70,7 @@ model = SAC(
     "MlpPolicy",
     env,
     verbose=1,
+    #device="cpu",           # FORCED CPU TRAINING
     tensorboard_log=logdir,
     learning_rate=3e-4,     # Standard LR for SAC
     buffer_size=1_000_000,  # Large replay buffer for off-policy learning
@@ -86,11 +87,11 @@ model = SAC(
 )
 
 # --- Training Configuration ---
-TOTAL_TIMESTEPS = 1_500_000  # SAC often converges faster than PPO
-SAVE_INTERVAL = 250_000
+TOTAL_TIMESTEPS = 2_250_000  
+SAVE_INTERVAL = 1_000_000
 
 print(f"\n{'='*60}")
-print(f"Starting SAC Training - Continuous 3D UAV Environment")
+print(f"Starting SAC Training on CPU - Continuous 3D UAV Environment")
 print(f"Algorithm: Soft Actor-Critic (SAC)")
 print(f"Total Timesteps: {TOTAL_TIMESTEPS:,}")
 print(f"{'='*60}\n")
