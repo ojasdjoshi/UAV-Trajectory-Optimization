@@ -6,6 +6,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from stable_baselines3 import SAC  # Changed from PPO to SAC
 import os
 import math
+import argparse
 
 # Import the environment we created
 from uavenv import UavEnv, SPACE_X, SPACE_Y, SPACE_Z, MIN_ALTITUDE, MAX_ALTITUDE
@@ -17,7 +18,7 @@ class UAVTrajectoryVisualizer:
     Updated for SAC Algorithm, Continuous Action Space, and Variable Obstacle Heights.
     """
     
-    def __init__(self, model_path, num_episodes=1, max_steps=200):
+    def __init__(self, model_path, num_episodes=3, max_steps=200):
         """
         Initialize the visualizer.
         
@@ -384,10 +385,15 @@ class UAVTrajectoryVisualizer:
 
 if __name__ == "__main__":
     # Ensure this path matches your trained SAC model file
-    MODEL_PATH = r"Energy Optimization\models\uav_sac_continuous\1770867923\sac_final_model.zip"
+    MODEL_PATH = r"Energy Optimization\models\uav_sac_optimized\1770923807\sac_final_model.zip"
     
-    if os.path.exists(MODEL_PATH):
-        visualizer = UAVTrajectoryVisualizer(model_path=MODEL_PATH, num_episodes=1)
+    parser = argparse.ArgumentParser(description='UAV SAC visualizer')
+    parser.add_argument('--model', type=str, default=MODEL_PATH, help='Path to SAC model .zip file')
+    parser.add_argument('--episodes', '-e', type=int, default=3, help='Number of episodes to visualize')
+    args = parser.parse_args()
+
+    if os.path.exists(args.model):
+        visualizer = UAVTrajectoryVisualizer(model_path=args.model, num_episodes=args.episodes)
         visualizer.visualize_all()
     else:
         print(f"ERROR: SAC Model not found at {MODEL_PATH}.")

@@ -337,7 +337,7 @@ class UavEnv(gym.Env):
         self.observation_space = spaces.Box(low=-1.0, high=1.0, shape=(13,), dtype=np.float32)
         
         # --- UPGRADE: 9 OBSTACLES WITH DIFFERENT HEIGHTS (3x3 Grid) ---
-        self.obstacle_radius = 10.0
+        self.obstacle_radius = 15.0
         self.obstacles = []
         grid_points = [125, 250, 375]
         # Heights are randomized between 40m and 100m to create a diverse urban skyline

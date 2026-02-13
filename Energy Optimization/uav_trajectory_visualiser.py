@@ -356,7 +356,7 @@ class UAVTrajectoryVisualizer:
         self.env.close()
 
 if __name__ == "__main__":
-    MODEL_PATH = r"Energy Optimization\models\uav_sac_continuous\1770867923\sac_final_model.zip"
+    MODEL_PATH = r"Energy Optimization\models\uav_sac_optimized\1770923807\sac_final_model.zip"
     if os.path.exists(MODEL_PATH):
         visualizer = UAVTrajectoryVisualizer(model_path=MODEL_PATH, num_episodes=1)
         visualizer.visualize_all()
