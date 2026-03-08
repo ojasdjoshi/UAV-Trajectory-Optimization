@@ -518,7 +518,7 @@ class UAVTrajectoryVisualizer:
         print(f"\n╔{'═'*68}╗")
         print(f"║  UAV TRAJECTORY VISUALIZATION WITH VELOCITY & DISTANCE          ║")
         print(f"╚{'═'*68}╝\n")
-        
+    
         for episode in range(self.num_episodes):
             self.collect_trajectory(episode)
             episode_suffix = f"_ep{episode+1}" if self.num_episodes > 1 else ""
