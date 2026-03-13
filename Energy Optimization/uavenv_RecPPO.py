@@ -52,7 +52,7 @@ OMEGA_0 = 0.3  # Weight for GU energy
 OMEGA_1 = 0.7  # Weight for UAV energy
 
 # QoS Parameters
-R_REQ = 500  # Minimum required data rate in kbps (R^req from paper)
+R_REQ = 2000  # Minimum required data rate in kbps (R^req from paper)
 BANDWIDTH_MHZ = 20  # D^t_{n,k} bandwidth in MHz
 
 # 3D Space Configuration
@@ -341,11 +341,15 @@ class UavEnv(gym.Env):
         self.obstacle_radius = 15.0
         self.obstacles = []
         grid_points = [125, 250, 375]
-        # Heights are randomized between 40m and 100m to create a diverse urban skyline
+        # Heights are fixed between 40m and 100m to create a diverse urban skyline
+        # Each obstacle has a unique constant height throughout training
+        obstacle_heights = [50.0, 65.0, 80.0, 70.0, 100.0, 45.0, 55.0, 85.0, 75.0]
+        height_idx = 0
         for gx in grid_points:
             for gy in grid_points:
-                h_obs = random.uniform(40, 100) 
+                h_obs = obstacle_heights[height_idx]
                 self.obstacles.append(Entity(x=gx, y=gy, z=0, height=h_obs))
+                height_idx += 1
         
         # Entity instances
         self.base = Entity(x=SPACE_X//2, y=SPACE_Y//2, z=0)

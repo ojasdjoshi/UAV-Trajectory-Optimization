@@ -73,7 +73,7 @@ model = RecurrentPPO(
 
 
 # --- Training Execution ---
-TOTAL_TIMESTEPS = 2_000_000  # PPO often converges faster than SAC in discrete-like steps
+TOTAL_TIMESTEPS = 2_250_000  # PPO often converges faster than SAC in discrete-like steps
 metrics_callback = PPOMetricsCallback()
 
 print(f"Starting training for {TOTAL_TIMESTEPS} steps...")
