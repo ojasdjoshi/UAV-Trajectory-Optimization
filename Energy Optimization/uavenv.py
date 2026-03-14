@@ -52,7 +52,7 @@ OMEGA_0 = 0.3  # Weight for GU energy
 OMEGA_1 = 0.7  # Weight for UAV energy
 
 # QoS Parameters
-R_REQ = 500  # Minimum required data rate in kbps (R^req from paper)
+R_REQ = 2000  # Minimum required data rate in kbps (R^req from paper)
 BANDWIDTH_MHZ = 20  # D^t_{n,k} bandwidth in MHz
 
 # 3D Space Configuration
@@ -334,17 +334,21 @@ class UavEnv(gym.Env):
         self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(3,), dtype=np.float32)
         
         # Observation space (13 features: vectors, pos, normalized energy and progress)
-        self.observation_space = spaces.Box(low=-1.0, high=1.0, shape=(13,), dtype=np.float32)
+        self.observation_space = spaces.Box(low=-1.0, high=1.0, shape=(16,), dtype=np.float32)
         
-        # --- UPGRADE: 9 OBSTACLES WITH DIFFERENT HEIGHTS (3x3 Grid) ---
+         # --- UPGRADE: 9 OBSTACLES WITH DIFFERENT HEIGHTS (3x3 Grid) ---
         self.obstacle_radius = 15.0
         self.obstacles = []
         grid_points = [125, 250, 375]
-        # Heights are randomized between 40m and 100m to create a diverse urban skyline
+        # Heights are fixed between 40m and 100m to create a diverse urban skyline
+        # Each obstacle has a unique constant height throughout training
+        obstacle_heights = [50.0, 65.0, 80.0, 70.0, 100.0, 45.0, 55.0, 85.0, 75.0]
+        height_idx = 0
         for gx in grid_points:
             for gy in grid_points:
-                h_obs = random.uniform(40, 100) 
+                h_obs = obstacle_heights[height_idx]
                 self.obstacles.append(Entity(x=gx, y=gy, z=0, height=h_obs))
+                height_idx += 1
         
         # Entity instances
         self.base = Entity(x=SPACE_X//2, y=SPACE_Y//2, z=0)
@@ -379,11 +383,18 @@ class UavEnv(gym.Env):
         # Mission progress indicator
         progress = (2 * self.current_step / self.max_steps) - 1
         
+        _, bottleneck_rate, _, _, _, _, _, _ = self._calculate_metrics()
+        rate_norm = np.tanh(bottleneck_rate / 10) # Normalized throughput
+
+        user_vel_x = (self.user.x - self.user.prev_x) / MAX_MOVE_DIST
+        user_vel_y = (self.user.y - self.user.prev_y) / MAX_MOVE_DIST
+        
+        # Total: 6 (vectors) + 3 (pos) + 3 (metrics) + 1 (progress) + 1 (rate) + 1 (user_vel) = 15 features
         return np.concatenate([
             vec_to_user, 
             vec_to_base, 
             uav_pos_norm,
-            [step_uav_norm, step_gu_norm, velocity_norm, progress]
+            np.array([step_uav_norm, step_gu_norm, velocity_norm, progress, rate_norm, user_vel_x, user_vel_y])
         ]).astype(np.float32)
 
     def _calculate_metrics(self):
